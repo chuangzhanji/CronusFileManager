@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {getTranslations} from '../Redux/actions';
 
 function Translate(props){
+    //
     const {translations, children, replace } = props;
     const replaceArr = (typeof replace !== 'undefined') ? replace : [];
     const checkWord = (dictionary, word) => {

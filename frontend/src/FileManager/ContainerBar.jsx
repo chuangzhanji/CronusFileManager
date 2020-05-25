@@ -1,12 +1,15 @@
 import React, { useState} from "react";
 import { connect } from 'react-redux';
 import { Menu, MenuItem, Divider, Box } from '@material-ui/core';
+// 第三方组件：用于视图组件的拖动
 import { DragDropContext} from 'react-beautiful-dnd';
+// redux action
 import { uploadFile, pasteFiles } from '../Redux/actions';
+// 以material-ui style格式编写的css
 import useStyles from './Elements/Styles';
+// 自定义组件
 import InfoBoxes from './Elements/InfoBoxes';
 import Dropzone from './Elements/Dropzone';
-
 import ViewItems from './ViewItems';
 
 const contextMenuInital = {
@@ -151,6 +154,7 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    //
   uploadFile: (files, path) => dispatch(uploadFile(files, path)),
   pasteFiles: (files, type,destination) => dispatch(pasteFiles(files, type,destination)),
 });

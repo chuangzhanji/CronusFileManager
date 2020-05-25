@@ -1,3 +1,12 @@
+/**
+ * @package		Cronus File Manager
+ * @author		Farhad Aliyev Kanni
+ * @copyright	Copyright (c) 2011 - 2019, Kannifarhad, Ltd. (http://www.kanni.pro/)
+ * @license		https://opensource.org/licenses/GPL-3.0
+ * @link		http://filemanager.kanni.pro
+**/
+
+// 
 const unzipper = require('unzipper');
 const archiver = require('archiver');
 const nodePath = require('path');
@@ -84,6 +93,7 @@ module.exports = {
 
     },
 
+    // 创建文件夹
     async createfolder(req, res, next) {
         let { path, folder, mask } = req.body;
             path = escapePath(path);
@@ -106,6 +116,7 @@ module.exports = {
 
     },
 
+    // 删除
     async delete(req, res, next) {
         let { items } = req.body;
         if(!checkVariables([items])){

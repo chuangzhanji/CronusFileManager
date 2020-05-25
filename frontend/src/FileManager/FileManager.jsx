@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
+// redux action
 import { 
         setSelectedFiles, 
         inverseSelectedFiles,
@@ -24,19 +25,25 @@ import {
         listViewChange,
         clearBufferFiles
         } from '../Redux/actions';
+// material-ui 组件
 import { Paper, Grid, Box, Collapse } from '@material-ui/core/';
+// material-ui hook api
 import { makeStyles } from '@material-ui/core/styles';
+// 自定义组件
 import FolderBar from './FolderBar';
 import TopBar from './TopBar';
 import ContainerBar from './ContainerBar';
 import PopupDialog from './Elements/PopupDialog';
+import ImageEditor from './Elements/ImageEditor';
 import config from './Elements/config.json';
+// 杂项
 import mainconfig from '../Data/Config';
 import {convertDate, formatBytes} from '../Utils/Utils';
-import ImageEditor from './Elements/ImageEditor';
+// 第三方组件
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import './Assets/PerfectScroll.css';
 
+// material-ui hook api
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
@@ -80,17 +87,22 @@ const useStyles = makeStyles(theme => ({
       },
 }));
 
-function FileManager(props){    
+function FileManager(props){
+    // material-ui hook api
     const classes = useStyles();
     var {selectCallback, height} = props;
+    //
     height = (height !== undefined || height > 300 ? `${height}px` : '300px');
     const bigHeight = `${window.innerHeight - 100}px`;
+    // 组件state
     const [messagesList, setMessages] = useState([]);
     const [isloading, setLoading] = React.useState(false);
+    // 是否显示upload弹窗
     const [uploadBox, setuploadBox] = React.useState(false);
+    // 是否以最高样式显示
     const [expand, setExpand] = React.useState(false);
     const selecMessages = props.selectedFiles.length > 0 || props.bufferedItems.files.length > 0;
-
+    //
     const [editImage, setEditImage] = React.useState({
         open:false,
         closeCallBack: false,
@@ -104,6 +116,7 @@ function FileManager(props){
         open: false,
     });
 
+    //
     const handlingHistory = (historyInfo, index) => {
         props.setHistoryIndex(index);
         props.unsetSelectedFiles();
@@ -123,6 +136,7 @@ function FileManager(props){
         });
     };
 
+    //
     const handleClickPopupOpen = (data) => {
         setPopup({
           ...data,
@@ -130,6 +144,7 @@ function FileManager(props){
         });
     };
 
+    // 操作函数集合
     const operations = {
 
         handleAddSelected :(path) => {
@@ -662,6 +677,7 @@ function FileManager(props){
         }
     }
 
+    // 子组件按钮属性定义
     const allButtons = {
         copy:{
             title: 'Copy',
@@ -841,6 +857,7 @@ function FileManager(props){
         
     }
 
+    // 按钮分组
     const aviableButtons = {
         topbar:[
             [allButtons.goBack, allButtons.goForwad, allButtons.goParent],
@@ -877,6 +894,7 @@ function FileManager(props){
     return (
         <div>
             <ImageEditor />
+
             <div className={expand ? classes.fmExpanded : classes.fmMinimized}>
                 <Paper>
                     {popupData.open &&  <PopupDialog {...popupData} /> }
@@ -884,6 +902,7 @@ function FileManager(props){
                     <TopBar buttons={aviableButtons} />
                     <Grid container>
                         <Grid item xs={3} sm={2} className={classes.folderSide}>
+                            {/*文件栏*/}
                             <PerfectScrollbar>
                                 <div style={{ maxHeight: (expand ? bigHeight : height )}}>
                                     <FolderBar foldersList={props.foldersList} onFolderClick={operations.handleSetMainFolder} selectedFolder={props.selectedFolder} />
@@ -891,11 +910,13 @@ function FileManager(props){
                             </PerfectScrollbar>
                         </Grid>
                         <Grid className={classes.containerWrapper} item xs={9} sm={10}>
+                            {/*内容*/}
                             <PerfectScrollbar>
                                 <div style={{ maxHeight: (expand ? bigHeight : height )}}>
                                     <ContainerBar buttons={aviableButtons} messages={messagesList} isloading={isloading} uploadBox={uploadBox} operations={operations} />
                                 </div>
                             </PerfectScrollbar>
+                            {/*信息提示*/}
                             <Collapse in={selecMessages}>
                                 <Box className={classes.infoMessages}>
                                     {props.selectedFiles.length > 0 && <div className="text"><b>{props.selectedFiles.length}</b> items are selected</div> }

@@ -1,17 +1,30 @@
+/**
+ * @package		Cronus File Manager
+ * @author		Farhad Aliyev Kanni
+ * @copyright	Copyright (c) 2011 - 2019, Kannifarhad, Ltd. (http://www.kanni.pro/)
+ * @license		https://opensource.org/licenses/GPL-3.0
+ * @link		http://filemanager.kanni.pro
+**/
+
 'use strict';
 
+// graceful-fs模块，fs模块的加强版
 const FS = require('graceful-fs');
 const PATH = require('path');
+
+// 常量
 const constants = {
 	DIRECTORY: 'folder',
 	FILE: 'file'
 }
 
+// 读取文件夹信息
 function safeReadDirSync (path) {
 	let dirData = {};
 	try {
 		dirData = FS.readdirSync(path);
 	} catch(ex) {
+		// 异常类型检查
 		if (ex.code == "EACCES" || ex.code == "EPERM") {
 			//User does not have permissions, ignore directory
 			return null;
@@ -26,6 +39,7 @@ function safeReadDirSync (path) {
  * @param  {string} path
  * @return {string}
  */
+// 路径反斜线、斜线标准化
 function normalizePath(path) {
 	return path.replace(/\\/g, '/');
 }
@@ -35,9 +49,11 @@ function normalizePath(path) {
  * @param  {any}  regExp
  * @return {Boolean}
  */
+// 判断是否为正则表达式
 function isRegExp(regExp) {
 	return typeof regExp === "object" && regExp.constructor == RegExp;
 }
+// 权限修改
 function permissionsConvert(mode){
 	return {
 		'others': (mode & 1 ? 'x-' : '') + (mode & 2 ? 'w-' : '')+  (mode & 4 ? 'r' : ''),
@@ -55,27 +71,32 @@ function permissionsConvert(mode){
  * @param  {function} onEachDirectory
  * @return {Object}
  */
+//
 function directoryTree (path, options, onEachFile, onEachDirectory, depth) {
 	const name = PATH.basename(path);
 	const item = { path, name };
 	let stats;
 
+	// 获取文件状态
 	try { stats = FS.statSync(path); }
 	catch (e) { return null; }
 
 	// Skip if it matches the exclude regex
+	// 剔除正则匹配的文件
 	if (options && options.exclude) {
 		const excludes =  isRegExp(options.exclude) ? [options.exclude] : options.exclude;
 		if (excludes.some((exclusion) => exclusion.test(path))) {
 			return null;
 		}
 	}
+	// 基本信息
 	item.created = stats.birthtime;
 	item.modified = stats.mtime;
 	item.type = constants.DIRECTORY;
 	item.id = `${item.type}_${stats.ino}`;
 	item.premissions = permissionsConvert(stats.mode);
 
+	// 文件
 	if (stats.isFile() && options.includeFiles) {
 
 		const ext = PATH.extname(path).toLowerCase();
@@ -86,7 +107,6 @@ function directoryTree (path, options, onEachFile, onEachDirectory, depth) {
 		item.size = stats.size;  // File size in bytes
 		item.extension = ext;
 		item.type = constants.FILE;
-		
 
 		if (options && options.attributes) {
 			options.attributes.forEach((attribute) => {
@@ -98,6 +118,7 @@ function directoryTree (path, options, onEachFile, onEachDirectory, depth) {
 			onEachFile(item, PATH, stats);
 		}
 	}
+	// 文件夹
 	else if (stats.isDirectory()) {
 
 		let dirData = safeReadDirSync(path);

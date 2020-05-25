@@ -8,12 +8,14 @@ export function removeCSSClass(ele, cls) {
   }
   
   export const toAbsoluteUrl = pathname => process.env.PUBLIC_URL + pathname;
-  
+
+  // 日期数据格式转换
   export const convertDate = dateString=> {
     var mydate = new Date(dateString);
     return `${mydate.toLocaleDateString("en-GB")} ${mydate.toLocaleTimeString("en-GB")}`;
   }
-  
+
+  // 比特计算
   export const formatBytes = (bytes, decimals) => {
     if(bytes === 0) return '0 Bytes';
     if(bytes === undefined) return '';

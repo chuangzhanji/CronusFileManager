@@ -1,13 +1,15 @@
 import React from "react";
 import { connect } from 'react-redux';
+// redux action
 import { setSorting, filterSorting, setImagesSettings } from '../Redux/actions';
 import { makeStyles } from '@material-ui/core/styles';
 import TopBarButtonGroups from './Elements/TopBarButtonGroups';
+// material-ui组件
 import { Grid, Radio, Divider, FormControlLabel } from '@material-ui/core/';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-
+// 样式
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
@@ -43,9 +45,12 @@ const useStyles = makeStyles(theme => ({
 function TopBar(props){
     const classes = useStyles();
     const { buttons , orderFiles, showImages} = props;
+    //
     const [anchorEl, setAnchorEl] = React.useState(null);
+    // 菜单显示
     const [open, setOpen] = React.useState({sorting:false,search:false,settings:false});
 
+    // 显示菜单
     const handleOpenMenu = (event, name) => {
         switch (name) {
             case 'sorting':
@@ -61,29 +66,35 @@ function TopBar(props){
             default:
                 break;
         }
+        // 弹出菜单绑定
         setAnchorEl(event.currentTarget);
     };
 
+    // 执行文件排序
     const handleSetOrderBy = (orderBy) =>{
         props.setSorting(orderBy, orderFiles.field);
         props.filterSorting();
     }
 
+    // 执行文件排序正反序
     const handleSetOrderField = (field) =>{
         props.setSorting(orderFiles.orderBy, field);
         props.filterSorting();
     }
 
+    // 关闭弹出窗口
     const handleClose = () => {
         setAnchorEl(null);
         setOpen({sorting:false,search:false,settings:false});
     };
 
+    // 更改image显示设置
     const handleSetSettings = (imagePreview) =>{
         props.setImagesSettings(imagePreview);
     }
 
 
+    // 选项
     const options = [
         {
             name: 'By Name',
@@ -99,6 +110,7 @@ function TopBar(props){
         }
     ];
 
+    // 按钮属性定义
     const additionalButtons = [
         {
             title: 'Sorting',
@@ -117,14 +129,18 @@ function TopBar(props){
     return (
         <>
             <Grid container className={classes.container} >
+                {/*topbar按钮*/}
                 {buttons.topbar.map((groups, index)=> 
                     <Grid item key={index}>
                         <TopBarButtonGroups buttons={groups} index={index} />
                     </Grid>
                 )}
-            
+
+
                 <Grid style={{ marginLeft: "auto" }}>
+                    {/*排序按钮和设置按钮*/}
                     <TopBarButtonGroups buttons={additionalButtons} />
+                        {/*两个弹出菜单*/}
                         <Menu
                             id="sorting-menu"
                             anchorEl={anchorEl}

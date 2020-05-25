@@ -6,6 +6,7 @@ export default {
         files:[]
     },
     foldersList:[],
+    //
     history: {
       currentIndex: 0,
       steps:[]

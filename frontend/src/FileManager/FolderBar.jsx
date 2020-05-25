@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+// material-ui 组件
 import { ListItem, List} from "@material-ui/core";
+// material-ui hook api
 import { makeStyles } from '@material-ui/core/styles';
+// 功能字符串清理
 import clsx from "clsx";
 
 export default function FolderList(props){
+    // 样式
     const useStyles = makeStyles(theme => ({
         root: {
             padding: '10px 0px',
@@ -66,7 +70,6 @@ export default function FolderList(props){
                 )}
             </div>
     )
-   
 }
 
 
@@ -89,17 +92,22 @@ function MenuSubmenu(props){
 
 
 function MenuItem(props) {
+    // ref
     const asideLeftLIRef = React.createRef();
     const { item, currentUrl, onFolderClick} = props;
+    // 是否显示文件夹内容
     const [expand, setExpand] = useState(false);
 
+    // 点击文件夹
     const mouseClick = () => {
         onFolderClick(item.path);
     }
+    // 显示或隐藏文件夹内容
     const handleExpand = () => {
         setExpand(!expand);
     }
 
+    // ？？？
     const isMenuItemIsActive = item => {
         if (item.children && item.children.length > 0) {
         isMenuRootItemIsActive(item);
@@ -107,6 +115,7 @@ function MenuItem(props) {
         return currentUrl.indexOf(item.path) !== -1;
     };
 
+    // ？？？
     const isMenuRootItemIsActive = item => {
         for (const subItem of item.children) {
         if (isMenuItemIsActive(subItem)) {

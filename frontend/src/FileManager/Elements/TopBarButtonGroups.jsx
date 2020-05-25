@@ -2,6 +2,7 @@ import React from 'react';
 import {Tooltip, Button, ButtonGroup} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+// 样式
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -29,6 +30,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+// 对Button的封装
 export default function ButtonGroupSimple(props){
   const classes = useStyles();
   const { buttons, index } = props;
@@ -40,7 +42,8 @@ export default function ButtonGroupSimple(props){
                           <Button  key={index} className={classes.button} disabled={true} aria-haspopup="true">
                             {button.icon && <span className={`${button.icon}`}></span>}
                           </Button>
-                          : 
+                          :
+                            // 添加按钮提示
                           <Tooltip key={index} title={button.title} aria-label={button.title}>
                             <Button  className={classes.button} onClick={button.onClick} disabled={button.disable} aria-haspopup="true">
                               {button.icon && <span className={`${button.icon}`}></span>}

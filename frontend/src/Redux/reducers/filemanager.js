@@ -21,13 +21,16 @@ import {
 export default function reducer(state = {}, action){
     switch(action.type){
 
+        // 图片设置
         case SET_IMAGE_SETTINGS:
             return {...state, showImages: action.imagePreview};
 
+        // 排序操作
         case RUN_SORTING_FILTER:
                 let sortedFiles = sortFilter(state.filesList, state.orderFiles);
             return {...state, filesList: sortedFiles};
 
+        // 排序设置
         case SET_SORT_ORDER_BY:
             return {...state, orderFiles: 
                         {
@@ -36,11 +39,14 @@ export default function reducer(state = {}, action){
                         }
                     };
 
+        // 清空选择文件
         case UNSET_SELECTED_FILES:
             return {...state, selectedFiles: []};
 
+        // 选择文件
         case SET_SELECTED_FILES:
                 var selectedFilesNew = [...state.selectedFiles];
+                // 新选择的文件如果已经选择就取消选择，否则添加进选择
                 var index = selectedFilesNew.indexOf(action.item);
                 if (index !== -1) {
                         selectedFilesNew.splice(index, 1);
@@ -49,7 +55,7 @@ export default function reducer(state = {}, action){
                 }
             return {...state, selectedFiles: selectedFilesNew };
         
-
+        // 文件全选
         case SELECT_ALL_FILES:
                 var newSelected = state.filesList.reduce(function(result, file) {
                     if (file.private !== true) {
@@ -59,7 +65,7 @@ export default function reducer(state = {}, action){
                   }, []);
             return {...state, selectedFiles:newSelected};
 
-
+        // 反向选择
         case INVERSE_SELECTED_FILES:
                 var selectedFiles = state.selectedFiles;
                 const inversedSelected = state.filesList.reduce((nextSelected, file) => {
@@ -71,7 +77,7 @@ export default function reducer(state = {}, action){
 
             return {...state, selectedFiles:inversedSelected};
 
-
+        // 将选择的文件保存到缓存变量
         case COPY_FILES_TOBUFFER:
                 var bufferedItems = {
                     type: 'copy',
@@ -79,7 +85,7 @@ export default function reducer(state = {}, action){
                 }
             return {...state, bufferedItems, selectedFiles:[]};
 
-
+        // 将选择的文件保存到缓存变量
         case CUT_FILES_TOBUFFER:
                 bufferedItems = {
                     type: 'cut',
@@ -87,13 +93,15 @@ export default function reducer(state = {}, action){
                 }
             return {...state, bufferedItems, selectedFiles:[]};
 
+        // 清除缓存变量数据（清除缓存）
         case CLEAR_FILES_TOBUFFER:
                 bufferedItems = {
                     type: '',
                     files: []
                 }
             return {...state, bufferedItems};
-            
+
+        // 清除缓存变量数据（粘贴数据）
         case PASTE_FILES:
                 bufferedItems = {
                     type: '',
@@ -101,7 +109,7 @@ export default function reducer(state = {}, action){
                 }
             return {...state, bufferedItems};
 
-
+        // ？？？
         case SET_SELECTED_FOLDER: 
             let newHistory = {...state.history};
             if(!action.history){
@@ -113,19 +121,23 @@ export default function reducer(state = {}, action){
             }
             return {...state,history: newHistory, selectedFolder: action.path};
 
+        // 保存文件数据
         case GET_FILES_LIST: 
             let filesList = Array.isArray(action.data.children) ? action.data.children : [];
                 filesList = sortFilter(filesList, state.orderFiles);
             return {...state, filesList};
 
+        // 保存文件夹数据
         case GET_FOLDERS_LIST:
             return {...state, foldersList:action.data};
 
+        // 更新历史索引
         case SET_HISTORY_INDEX:
                 const newHistoryIndex = {...state.history};
                 newHistoryIndex.currentIndex = action.index;
             return {...state,history: newHistoryIndex};
-        
+
+        // 设置显示方式
         case SET_ITEM_VIEW:
             return {...state,itemsView: action.view};
 
@@ -134,6 +146,7 @@ export default function reducer(state = {}, action){
     }
 }
 
+// 文件排序
 function sortFilter(filesList, order){
         var sortedFiles = [];
         switch (order.field) {
